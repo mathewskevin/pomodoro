@@ -4,9 +4,6 @@ import time, datetime
 import sys, os
 import math
 
-sys.path.insert(0, 'C:\\Users\\zbdxwr\\Stuff\\Scripts')
-import pdb
-
 # function which brings terminal to forefront
 def windowTop(window_name): 
 	def windowEnumerationHandler(hwnd, top_windows):
