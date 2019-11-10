@@ -62,6 +62,7 @@ def stdout_time(type_string, end_time):
 		# write output to terminal
 		sys.stdout.write('\r' + type_string + ' countdown: ' + countdown_string)
 		sys.stdout.flush()
+		time.sleep(0.2)
 
 # pomodoro timer
 def pomodoro_time(pom_time):
