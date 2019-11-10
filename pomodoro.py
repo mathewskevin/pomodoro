@@ -1,14 +1,16 @@
+# Pomodoro Timer
+# Kevin Mathews 19/11/2019
+# A simple command line based pomodoro timer. Simply run this python file from the command line and follow the prompts.
+
 import pyautogui as pygui
 import win32gui
 import time, datetime
-import sys, os
-import math
+import sys, os, math
 
 # function which brings terminal to forefront
-def windowTop(window_name): 
+def window_top(window_name): 
 	def windowEnumerationHandler(hwnd, top_windows):
-		top_windows.append((hwnd, win32gui.GetWindowText(hwnd)))
-	 
+		top_windows.append((hwnd, win32gui.GetWindowText(hwnd)))	 
 	results = []
 	top_windows = []	
 	win32gui.EnumWindows(windowEnumerationHandler, top_windows)
@@ -57,6 +59,7 @@ def stdout_time(type_string, end_time):
 			timer_toggle = False
 			countdown_string = '0:00'
 
+		# write output to terminal
 		sys.stdout.write('\r' + type_string + ' countdown: ' + countdown_string)
 		sys.stdout.flush()
 
@@ -65,7 +68,6 @@ def pomodoro_time(pom_time):
 	start_time, end_time = time_analysis(pom_time) # get start and end time
 
 	#https://stackabuse.com/how-to-format-dates-in-python/
-	#print('\nPomodoro running...')
 	print('\nPomodoro running...')
 	print(start_time.strftime("%H:%M"), '<- pomodoro start time')
 	print(end_time.strftime("%H:%M"), '<- pomodoro end time')
@@ -76,7 +78,6 @@ def break_time(brk_time):
 	start_time, end_time = time_analysis(brk_time) # get start and end time
 
 	#https://stackabuse.com/how-to-format-dates-in-python/
-	#print('\nPomodoro running...')
 	print('\nBreak running...')
 	print(start_time.strftime("%H:%M"), '<- break start time')
 	print(end_time.strftime("%H:%M"), '<- break end time')
@@ -84,23 +85,23 @@ def break_time(brk_time):
 
 # MAIN LOOP	
 # wait for input to start initial pomodoro
-click_point(1570, 1061)
-windowTop('cmd')
-input('\nReady to start pomodoro? Hit an key to start.')
-pomodoro_time(25) # start countdown to 25 min
+click_point(1570, 1061) # click windows taskbar, needed for window_top()
+window_top('cmd')
+input('\nReady to start pomodoro? Hit ENTER to start.')
+pomodoro_time(25) # print pomodoro timer
 
 pomodoro_loop = True
 while pomodoro_loop == True:
 	# when finished, bring terminal to top of screen, repeat loop
-	click_point(1570, 1061)
-	windowTop('cmd')
-	input('\n\nPomodoro done. Ready to start break? Hit an key to start.')
-	break_time(5)
+	click_point(1570, 1061) # click windows taskbar
+	window_top('cmd')
+	input('\n\nPomodoro done. Ready to start break? Hit ENTER to start.')
+	break_time(5) # print break timer
 
 	# when finished, bring terminal to top of screen, repeat loop
-	click_point(1570, 1061)
-	windowTop('cmd')
-	input('\n\nBreak done. Ready to start pomodoro? Hit an key to start.')
-	pomodoro_time(25)	
+	click_point(1570, 1061) # click windows taskbar
+	window_top('cmd')
+	input('\n\nBreak done. Ready to start pomodoro? Hit ENTER to start.')
+	pomodoro_time(25)# print pomodoro timer
 	
 print('\n\ndone.') # this line will never be reached
