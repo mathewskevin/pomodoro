@@ -38,7 +38,6 @@ def zero_string(num_val):
 def time_analysis(min_length):			
 	# https://stackoverflow.com/questions/12448592/how-to-add-delta-to-python-datetime-time
 	# print scheduled pomodoro timespan
-	# start time - end time
 	time_delta = datetime.timedelta(minutes=min_length)
 	start_time = datetime.datetime.now()
 	end_time = start_time + time_delta	
@@ -65,44 +64,45 @@ def stdout_time(type_string, end_time):
 		time.sleep(0.2)
 
 # pomodoro timer
-def pomodoro_time(pom_time):
-	start_time, end_time = time_analysis(pom_time) # get start and end time
+def pomodoro_timer(time_type, time_length):
+	start_time, end_time = time_analysis(time_length) # get start and end time
 
 	#https://stackabuse.com/how-to-format-dates-in-python/
-	print('\nPomodoro running...')
-	print(start_time.strftime("%H:%M"), '<- pomodoro start time')
-	print(end_time.strftime("%H:%M"), '<- pomodoro end time')
-	stdout_time('pomodoro', end_time)
-
-# break timer
-def break_time(brk_time):
-	start_time, end_time = time_analysis(brk_time) # get start and end time
-
-	#https://stackabuse.com/how-to-format-dates-in-python/
-	print('\nBreak running...')
-	print(start_time.strftime("%H:%M"), '<- break start time')
-	print(end_time.strftime("%H:%M"), '<- break end time')
-	stdout_time('break', end_time)
-
-# MAIN LOOP	
-# wait for input to start initial pomodoro
-click_point(1570, 1061) # click windows taskbar, needed for window_top()
-window_top('cmd')
-input('\nReady to start pomodoro? Hit ENTER to start.')
-pomodoro_time(25) # print pomodoro timer
-
-pomodoro_loop = True
-while pomodoro_loop == True:
-	# when finished, bring terminal to top of screen, repeat loop
-	click_point(1570, 1061) # click windows taskbar
-	window_top('cmd')
-	input('\n\nPomodoro done. Ready to start break? Hit ENTER to start.')
-	break_time(5) # print break timer
-
-	# when finished, bring terminal to top of screen, repeat loop
-	click_point(1570, 1061) # click windows taskbar
-	window_top('cmd')
-	input('\n\nBreak done. Ready to start pomodoro? Hit ENTER to start.')
-	pomodoro_time(25)# print pomodoro timer
+	print('\n' + time_type.capitalize() + ' running...')
+	print(start_time.strftime("%H:%M"), '<- ' + time_type + ' start time')
+	print(end_time.strftime("%H:%M"), '<- ' + time_type + ' end time')
+	stdout_time(time_type, end_time)
 	
-print('\n\ndone.') # this line will never be reached
+# function to run pomodoro timer
+def run_pomodoro(text_out = '\n\nBreak done. Ready to start pomodoro? Hit ENTER to start.'):
+	click_point(1570, 1061) # click windows taskbar, needed for window_top()
+	window_top('cmd')
+	input(text_out) # pause to wait for user to be ready for break
+	pomodoro_timer('pomodoro', 25)# print pomodoro timer
+
+# function to run break timer
+def run_break(text_out = '\n\nPomodoro done. Ready to start break? Hit ENTER to start.'):	
+	click_point(1570, 1061) # click windows taskbar, needed for window_top()
+	window_top('cmd')
+	input(text_out) # pause to wait for user to be ready for break
+	pomodoro_timer('break', 5) # print pomodoro timer
+
+# MAIN LOOP
+# wait for input to start initial pomodoro	
+if len(sys.argv) > 1:
+	if sys.argv[1] == "-b": # if you need to start with a break for any reason, supply the -b argument when starting.
+		run_break('\nReady to start break? Hit ENTER to start.')
+		run_pomodoro()
+		pomodoro_loop = True
+	else: # if not b, then error
+		print('incorrect arguments')
+		pomodoro_loop = False
+else:
+	pomodoro_loop = True
+	run_pomodoro('\nReady to start pomodoro? Hit ENTER to start.')
+
+while pomodoro_loop == True:
+	run_break()
+	run_pomodoro()
+	
+print('done.') # this line will never be reached
